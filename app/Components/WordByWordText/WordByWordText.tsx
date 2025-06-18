@@ -13,16 +13,16 @@ interface WordByWordTextProps {
     onComplete?: () => void;
 }
 
-const WBWT: React.FC<WordByWordTextProps> = ({ children, className, start=false, delay=50, span=false, onComplete }) => {
+const WBWT: React.FC<WordByWordTextProps> = ({ children, className, start=false, delay=75, span=false, onComplete }) => {
     const words = useMemo(() => children.trim().split(/\s+/), [children]);
     const [vis, setVis] = useState(0);
     const timer = useRef<NodeJS.Timeout | null>(null);
     const hasCalled = useRef(false);
-    const noop = () => {};
-    const onCompleteRef = useRef<() => void>(noop);
+    const noop = () => {}; // null operation to avoid undefined errors
+    const onCompleteRef = useRef<() => void>(() => {});
 
     useEffect (() => {
-        onCompleteRef.current = onComplete;
+        onCompleteRef.current = onComplete || noop;
     }, [onComplete]);
 
 
@@ -34,7 +34,7 @@ const WBWT: React.FC<WordByWordTextProps> = ({ children, className, start=false,
             setVis(v => {
                 if (v >= words.length) {
                     if (timer.current) clearInterval(timer.current);
-                    onCompleteRef.current();
+                    onCompleteRef.current?.();
                 }
                 return v + 1;
             });

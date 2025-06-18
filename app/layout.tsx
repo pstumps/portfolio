@@ -1,4 +1,3 @@
-'use client'
 import "@mantine/core/styles.css";
 import React from "react";
 import {
@@ -6,7 +5,6 @@ import {
     ColorSchemeScript,
     mantineHtmlProps,
     createTheme,
-    MantineTheme
 } from "@mantine/core";
 // import {theme} from "../theme";
 
@@ -28,7 +26,7 @@ export default function RootLayout({children}: { children: any }) {
                 <ColorSchemeScript/>
             </head>
             <body>
-                <MantineProvider theme={theme} defaultColorScheme='light'>{children}</MantineProvider>
+                <MantineProvider theme={theme} defaultColorScheme='auto'>{children}</MantineProvider>
             </body>
         </html>
     );
