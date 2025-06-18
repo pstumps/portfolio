@@ -1,51 +1,56 @@
-import { useMantineColorScheme, Box, Text, Stack, useMantineTheme } from "@mantine/core";
+import React, {useState, useEffect, useCallback} from "react";
+import { FaArrowDown } from "react-icons/fa";
+import {Box, Text, Stack} from "@mantine/core";
 import WBWT from "../WordByWordText/WordByWordText";
 import styles from "./Landing.module.css";
 
 const Landing = () => {
-    const theme = useMantineTheme();
-    const {colorScheme} = useMantineColorScheme();
 
-    const textColor = colorScheme === 'dark'
-        ? theme.colors.light[0]
-        : theme.colors.dark[0];
+    const allText = [
+        `I'm a full-stack developer with a passion for creating dynamic, responsive, and user-friendly web applications.`,
+        `I specialize in building scalable applications using modern technologies and frameworks. My goal is to deliver high-quality software that meets the needs of users and businesses alike.`,
+        `I have experience in various programming languages and frameworks, primarily Python and Django/Django REST Framework, along with JavaScript, TypeScript, React, and Next.js.`,
+        `I enjoy working on challenging projects that push the boundaries of what is possible on the web. In my free time, I love exploring new technologies and learning about the latest trends in web development.`,
+        `I didn't start off this way. I originally was a chemist- my degree is in biochemistry. But I have always had a passion for technology and programming. I've pivoted that passion into a career in software development, and I couldn't be happier. To me, it's a creative outlet!`,
+    ]
+
+    const [current, setCurrent] = useState(-1);
+    const handleComplete = useCallback(
+        (index: number) =>
+            setTimeout(() => setCurrent(prev => (prev === index ? prev + 1 : prev)), 300),
+        []
+    );
+
+    useEffect(() => {
+        const id = setTimeout(() => setCurrent(0), 1500);
+        return () => clearTimeout(id);
+    }, []);
 
     return (
-        <Box className={styles.landing} style={{ color: textColor }}>
+        <Box className={styles.landing}>
             <Box className={styles.greeting}>
-                <Text className={styles.greetingText}>Hello!</Text>
-                <Text className={styles.greetingText}>I&apos;m Patrick.</Text>
+                <Text className={styles.greetingText} span>Hello!</Text>
+                <Text className={styles.greetingText} span>I&apos;m Patrick.</Text>
             </Box>
-            <Stack className={styles.aboutMe} gap="md">
-                <Stack className={styles.description} gap="md">
-                    <WBWT className={styles.descriptionText} span>
-                        I&apos;m a full-stack developer with a passion for creating dynamic, responsive, and
-                        user-friendly web applications.
+            <Stack className={styles.aboutMe} gap="xs">
+                {allText.map((text, i) => (
+                    <WBWT
+                        key={i}
+                        className={i < 4 ? styles.descriptionText : styles.moreInfoText}
+                        start={i === current}
+                        span
+                        onComplete={() => handleComplete(i)}
+                    >
+                        {text}
                     </WBWT>
-                    <WBWT className={styles.descriptionText} span>
-                        I specialize in building scalable applications using modern technologies and frameworks.
-                        My goal is to deliver high-quality software that meets the needs of users and businesses alike.
-                    </WBWT>
-                    <WBWT className={styles.descriptionText} span>
-                        I have experience in various programming languages and frameworks, primarily Python and
-                        Django/Django REST Framework, along with JavaScript, TypeScript, React, and Node.js.
-                    </WBWT>
-                    <WBWT className={styles.descriptionText} span>
-                        I enjoy working on challenging projects that push the boundaries of what is possible on the web.
-                        In my free time, I love exploring new technologies and learning about the latest trends in web
-                        development.
-                    </WBWT>
-                </Stack>
-                <Box className={styles.moreInfo}>
-                    <WBWT span className={styles.moreInfoText} span>
-                        I didn&apos;t start off this way! I originally was a chemist- my degree is in
-                        biochemistry. But I have always had a passion for technology and programming.
-                        I&apos;ve pivoted that passion into a career in software development, and I couldn&apos;t be
-                        happier. To me, it&apos;s a creative outlet!
-                        But I&apos;m not just a developer! I&apos;m also a gamer and I love the outdoors.
-                    </WBWT>
-                </Box>
+                ))}
             </Stack>
+            <Box className={styles.scrollHintWrapper}>
+                <Text size="sm" fw={500}>
+                    Scroll down for more
+                </Text>
+                <FaArrowDown size={28} className={styles.arrow}/>
+            </Box>
         </Box>
     )
 }

@@ -17,11 +17,15 @@
 }
 
 .greetingText {
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 600;
     margin: 0.3rem 0;
     opacity: 0;
-    animation: fadeIn 1s ease-out forwards;
+    animation: fadeInTransform 1s ease-out forwards;
+}
+
+.greeting span:nth-child(1) {
+    animation-delay: 0.5s;
 }
 
 .greeting span:nth-child(2) {
@@ -31,8 +35,8 @@
 .aboutMe {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    max-width: 800px;
+    gap: 0.5rem;
+    max-width: 600px;
 }
 
 .description, .moreInfo {
@@ -49,9 +53,10 @@
 }
 
 .moreInfoText {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     line-height: 1.4;
     opacity: 0;
+    max-width: 400px;
     animation: fadeIn 1.5s ease-out forwards;
 }
 
@@ -75,7 +80,7 @@
     animation-delay: 6s;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInTransform {
     from {
         opacity: 0;
         transform: translateY(10px);
@@ -83,6 +88,15 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
 
@@ -100,5 +114,40 @@
 
     .aboutMe {
         width: 60%;
+    }
+}
+
+.scrollHintWrapper {
+    position: absolute;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+    animation-delay: 8s;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-0.5rem);
+    }
+}
+
+.arrow {
+    animation: bounce 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .arrow {
+        animation: none;
     }
 }

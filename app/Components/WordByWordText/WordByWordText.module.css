@@ -1,0 +1,7 @@
+.word {
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+.word.visible {
+  opacity: 1;
+}

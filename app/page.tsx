@@ -11,11 +11,17 @@ export default function HomePage() {
     const backgroundColor = colorScheme === "dark"
         ? theme.colors.dark[0]
         : theme.colors.light[0];
+
+    const textColor = colorScheme === 'dark'
+        ? theme.colors.light[0]
+        : theme.colors.dark[0];
+
     return (
         <div
             style={{
                 minHeight: "100vh",
                 background: backgroundColor,
+                color: textColor,
                 position: "relative"
             }}
         >

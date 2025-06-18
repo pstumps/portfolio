@@ -1,28 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+
 import { Text } from "@mantine/core";
+
+import styles from './WordByWordText.module.css';
 
 interface WordByWordTextProps {
     children: string;
     className?: string;
-    delay?: number;
+    start?: boolean;
+    delay?: number; // in ms
     span?: boolean;
+    onComplete?: () => void;
 }
 
-const WBWT: React.FC<WordByWordTextProps> = ({ children, className, delay=100, span=false }) => {
-    const words = children.split(' ');
-    const [vis, setVisCount] = useState(0);
+const WBWT: React.FC<WordByWordTextProps> = ({ children, className, start=false, delay=50, span=false, onComplete }) => {
+    const words = useMemo(() => children.trim().split(/\s+/), [children]);
+    const [vis, setVis] = useState(0);
+    const timer = useRef<NodeJS.Timeout | null>(null);
+    const hasCalled = useRef(false);
+    const noop = () => {};
+    const onCompleteRef = useRef<() => void>(noop);
+
+    useEffect (() => {
+        onCompleteRef.current = onComplete;
+    }, [onComplete]);
+
 
     useEffect(() => {
-        if (vis < words.length) {
-            const timeout = setTimeout(() => setVisCount(vis + 1), delay);
-            return () => clearTimeout(timeout);
+        if (!start) return;
+        hasCalled.current = false;
+        setVis(0);
+        timer.current = setInterval(() => {
+            setVis(v => {
+                if (v >= words.length) {
+                    if (timer.current) clearInterval(timer.current);
+                    onCompleteRef.current();
+                }
+                return v + 1;
+            });
+        }, delay);
+        return () => {
+            if (timer.current) clearInterval(timer.current);
         }
-    }, [vis, words.length, delay]);
-    const text = words.slice(0, vis).join(' ');
+    }, [start, delay, words.length]);
 
     return (
-        <Text className={className} span={span}>
-            {text}
+        <Text component={span ? 'span' : 'p'} className={className}>
+            {words.map((w, i) => (
+                <span
+                    key={i}
+                    className={`${styles.word} ${i < vis ? styles.visible : ''}`}
+                >
+                    {w}
+                    {i < words.length - 1 && ' '}
+                </span>
+            ))}
         </Text>
     );
 };
