@@ -1,0 +1,35 @@
+.root {
+    width: 34.375rem;
+    position: relative;
+    top: -0.469rem;
+}
+
+.label {
+    position: absolute;
+    top: 0.406rem;
+    left: var(--mantine-spacing-sm);
+    pointer-events: none;
+    z-index: 1;
+    color: var(--mantine-color-dark-3);
+    transition: font-size 150ms ease, color 150ms ease;
+
+    &[data-floating] {
+        opacity: 0;
+    }
+}
+
+.input {
+    background-color: #333;
+    color: var(--mantine-color-dark-3);
+
+    &::placeholder {
+        color: transparent;
+    }
+
+    &[data-floating] {
+        &::placeholder {
+            color: var(--mantine-color-placeholder);
+        }
+    }
+}
+

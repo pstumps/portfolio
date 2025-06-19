@@ -13,7 +13,7 @@ interface WordByWordTextProps {
     onComplete?: () => void;
 }
 
-const WBWT: React.FC<WordByWordTextProps> = ({ children, className, start=false, delay=75, span=false, onComplete }) => {
+const WBWT: React.FC<WordByWordTextProps> = ({ children, className, start=false, delay=50, span=false, onComplete }) => {
     const words = useMemo(() => children.trim().split(/\s+/), [children]);
     const [vis, setVis] = useState(0);
     const timer = useRef<NodeJS.Timeout | null>(null);

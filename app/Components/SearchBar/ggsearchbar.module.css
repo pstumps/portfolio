@@ -1,0 +1,132 @@
+.layout-container {
+    transition: height 0.5s ease, transform 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    margin-top: 8rem;
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+    border-radius: 1.875rem;
+    padding: 0.625rem 1.25rem;
+    height: 3.125rem;
+    position: relative;
+}
+
+.layout-container[data-focused='true'] {
+    transform: translateY(-0.5rem);
+    height: 3.125rem;
+}
+
+.ti-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+.other-stuff {
+    top: 0.625rem;
+    display: flex;
+    padding: 0 1.25rem;
+    justify-content: space-between;
+}
+
+.segmentedControl {
+    position: absolute;
+    height: 80%;
+    left: 2.75rem;
+}
+
+.fadeIn {
+    transform: translateY(-2.5rem);
+    opacity: 1;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fadeOut {
+    transform: translateY(0rem);
+    opacity: 0;
+    transition: opacity 0.20s ease, transform 0.5s ease;
+}
+
+.proggText {
+    position: absolute;
+    right: 2.5rem;
+    color: #019a8b;
+    font-weight: bold;
+    font-size: 1.5em;
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fadeInRight {
+    transform: translateY(-1.6rem);
+    opacity: 1;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fadeOutRight {
+    transform: translateY(0rem);
+    opacity: 0;
+    transition: opacity 0.20s ease, transform 0.5s ease;
+}
+
+.search-history-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #333;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 4px;
+    z-index: 10;
+    transform: translateY(-50px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.search-history-container.visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.search-history-title {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #aaa;
+}
+
+.search-history {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-history-item {
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 6px;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-history-item:hover {
+    background-color: #2b8062;
+}
+
+.no-history-message {
+    display: flex;
+    align-items: center;
+    color: #aaa;
+    font-size: 14px;
+    gap: 5px;
+}
+
+.icon-alert {
+    color: #ffcc00;
+}

@@ -1,0 +1,33 @@
+.root {
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+    box-shadow: var(--mantine-shadow-md);
+    border: rem(1px) solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-4));
+    opacity: 1;
+    position: absolute;
+    transition: opacity 150ms ease;
+    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.5);
+    border-radius: 0.5rem;
+  }
+  
+  .indicator {
+    background-image: linear-gradient(
+      to right,
+      var(--mantine-color-pink-filled),
+      var(--mantine-color-orange-filled)
+    );
+  }
+  
+  .control {
+    &::before {
+      display: none;
+    }
+  }
+  
+  .label {
+    &,
+    &:hover {
+      &[data-active] {
+        color: var(--mantine-color-white);
+      }
+    }
+  }

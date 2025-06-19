@@ -1,7 +1,8 @@
 'use client'
-import styles from "./page.module.css";
 import { ColorSchemeToggle } from "./Components/ColorSchemeToggle/ColorSchemeToggle";
+import FullPageScroller from "./Components/Scroller/FullPageScroller";
 import Landing from "./Components/Landing/LandingComponent";
+import SearchBarShowcase from "./Components/SearchbarShowcase/SearchBarShowcase";
 import { useMantineTheme, useMantineColorScheme } from "@mantine/core";
 
 export default function HomePage() {
@@ -35,7 +36,13 @@ export default function HomePage() {
             >
                 <ColorSchemeToggle />
             </div>
-            <Landing />
+            <FullPageScroller
+                duration={0.75}
+                sections={[
+                    <Landing key="landing" />,
+                    <SearchBarShowcase key="search-bar-showcase" />
+                ]}
+            />
         </div>
     )
 }
