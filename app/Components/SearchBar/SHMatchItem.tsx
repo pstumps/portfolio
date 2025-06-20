@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react';
-// import { useUser, ggUser } from '@/app/context/UserContext';
-// import { useCsrfToken } from '@/app/context/security/CSRFContext';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-
 import styles from './SearchHistoryItem.module.css';
 import { IoClose } from "react-icons/io5";
 import { FaRegStar } from "react-icons/fa";
@@ -11,9 +8,8 @@ import { FaStar } from "react-icons/fa";
 interface SHMatchItemProps {
     id: string;
     onRemove: (id: string) => void;
-    onSuccessfulFetch?: (id: string) => void;
+    matchData: SHMatch;
 }
-
 
 interface SHMatch {
     deadlock_id: string;
@@ -25,75 +21,11 @@ interface SHMatch {
     average_rank: string;
 }
 
-const SHMatchItem: React.FC<SHMatchItemProps> = ({id, onRemove, onSuccessfulFetch}) => {
-    const { user, setUser } = useUser();
-    const { csrfToken } = useCsrfToken();
-    const [SHMatch, setSHMatch] = useState<SHMatch | null>(null);
-    const isFavorite = user?.matchFavorites?.includes(id) ?? false;
+const SHMatchItem: React.FC<SHMatchItemProps> = ({id, onRemove, matchData}) => {
+    const [SHMatch, _] = useState<SHMatch | null>(matchData || null);
     const [hovered, setHovered] = useState(false);
     const [pressed, setPressed] = useState(false);
     const [removePressed, setRemovePressed] = useState(false);
-
-    /* Not necessary in showcase, but kept for reference
-    useEffect(() => {
-        const cachedData = localStorage.getItem(`match_${id}`);
-        if (cachedData) {
-            setSHMatch(JSON.parse(cachedData));
-        } else {
-            fetchSHMatch();
-        }
-        async function fetchSHMatch()  {
-            try {
-                const res = await fetch(`http://127.0.0.1:8080/matches/${id}/search-item/`);
-                if (!res.ok) throw new Error('Failed to fetch player data');
-                const data: SHMatch = await res.json();
-                localStorage.setItem(`match_${id}`, JSON.stringify(data));
-                setSHMatch(data);
-                onSuccessfulFetch?.(id);
-            } catch (err) {
-                setSHMatch(null);
-            }
-        }
-    }, [id, onSuccessfulFetch]);
-    */
-
-
-    const handleFavoriteToggle = async (event: React.MouseEvent) => {
-        event.stopPropagation();
-        if (!user) {
-            return;
-        }
-        const method = isFavorite ? 'DELETE' : 'POST';
-        const fetchOptions = {
-            method,
-            credentials: 'include' as const,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken ?? '',
-            },
-            body: JSON.stringify({ data: id }),
-        };
-
-        try {
-            const res = await fetch(`http://127.0.0.1:8080/user_mgmt/match-favorites/${id}/`,  fetchOptions);
-            if (res.ok) {
-                setUser((prevUser: ggUser) => {
-                    const currentFavorites = prevUser?.matchFavorites ?? [];
-                    return {
-                        ...prevUser,
-                        matchFavorites: isFavorite
-                            ? currentFavorites.filter((favId: string) => favId !== id)
-                            : [...currentFavorites, id],
-                    };
-                });
-            } else {
-                console.error('Failed to update favorites');
-            }
-        } catch (err) {
-            console.error('Error updating favorite:', err);
-        }
-    };
 
     if (!SHMatch) {
         return (
@@ -122,7 +54,6 @@ const SHMatchItem: React.FC<SHMatchItemProps> = ({id, onRemove, onSuccessfulFetc
             <div className={styles['match-item__left']}>
                 <div
                     className={styles['favorite']}
-                    onClick={handleFavoriteToggle}
                     onMouseEnter={() => setHovered(true)}
                     onMouseLeave={() => {
                         setHovered(false);
@@ -134,13 +65,9 @@ const SHMatchItem: React.FC<SHMatchItemProps> = ({id, onRemove, onSuccessfulFetc
                     }}
                     onMouseUp={() => setPressed(false)}
                 >
-                    {isFavorite
-                        ? (hovered
-                            ? <FaRegStar color='yellow' style={pressed ? {transform: 'scale(0.9)'} : {}}/>
-                            : <FaStar color='yellow' style={pressed ? {transform: 'scale(0.9)'} : {}}/>)
-                        : (hovered
-                            ? <FaStar color='yellow' style={pressed ? {transform: 'scale(0.9)'} : {}}/>
-                            : <FaRegStar color='yellow' style={pressed ? {transform: 'scale(0.9)'} : {}}/>)
+                    {hovered
+                        ? <FaStar color='yellow' style={pressed ? {transform: 'scale(0.9)'} : {}}/>
+                        : <FaRegStar color='yellow' style={pressed ? {transform: 'scale(0.9)'} : {}}/>
                     }
                 </div>
                 <Image src={SHMatch?.average_rank ?? ''} alt="" width={30} height={30}/>
@@ -172,7 +99,7 @@ const SHMatchItem: React.FC<SHMatchItemProps> = ({id, onRemove, onSuccessfulFetc
                     {SHMatch?.SF_team.map((id, index) => (
                         <Image
                             src={'/images/heroes/' + id + '_sm.webp'}
-                            alt={heroIDToIcons['jeff']}
+                            alt={id}
                             width={20}
                             height={20}
                             key={index}

@@ -2,9 +2,10 @@
 // import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { TextInput, SegmentedControl } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { CiCircleAlert } from "react-icons/ci";
 import floatingLabelClasses from './FloatingLabelInput.module.css';
 import gradientSegmentClasses from './GradientSegmentedControl.module.css';
+import { players, matches } from '@/app/MockData/MockData';
 
 import styles from './ggsearchbar.module.css';
 import SHMatchItem from "./SHMatchItem";
@@ -12,9 +13,26 @@ import SHPlayerItem from "./SHPlayerItem";
 
 type PlaceHolderKey = 'player' | 'match';
 
+interface SHMatch {
+    deadlock_id: string;
+    length: number;
+    date: number;
+    SF_team: string[];
+    AH_team: string[];
+    victor: string;
+    average_rank: string;
+}
+
+interface SHPlayer {
+    id: string;
+    name: string;
+    icon: string;
+    region: string;
+    lastMatchAverageRank: lastMatchAverageRank;
+}
+
 const GGSearchBar: React.FC = () => {
     const [selectedValue, setSelectedValue] = useState<PlaceHolderKey>('player');
-    // const router = useRouter();
     const [focused, setFocused] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
     const placeHolderMap : { [key in PlaceHolderKey]: string } = {
@@ -27,10 +45,15 @@ const GGSearchBar: React.FC = () => {
     const [matchHistory, setMatchHistory] = useState<string[]>([]);
 
     useEffect(() => {
-        const storedPlayerHistory = localStorage.getItem('playerHistory');
-        const storedMatchHistory = localStorage.getItem('matchHistory');
-        if (storedPlayerHistory) setPlayerHistory(JSON.parse(storedPlayerHistory));
-        if (storedMatchHistory) setMatchHistory(JSON.parse(storedMatchHistory));
+        const allPlayerIds = Object.keys(players);
+        const allMatchIds = Object.keys(matches);
+        setPlayerHistory(allPlayerIds);
+        setMatchHistory(allMatchIds);
+        // In the real app, searched players/matches would be put in local storage.
+        // const storedPlayerHistory = localStorage.getItem('playerHistory');
+        // const storedMatchHistory = localStorage.getItem('matchHistory');
+        // if (storedPlayerHistory) setPlayerHistory(JSON.parse(storedPlayerHistory));
+        // if (storedMatchHistory) setMatchHistory(JSON.parse(storedMatchHistory));
     }, []);
 
     const currentHistory = selectedValue === 'player' ? playerHistory : matchHistory;
@@ -49,7 +72,6 @@ const GGSearchBar: React.FC = () => {
             let finalValue = value.trim();
 
             if (selectedValue === 'player') {
-                // Convert profile ID if necessary
                 const profileRegex = /\/profiles\/(\d+)/;
                 const match = finalValue.match(profileRegex);
                 if (match && match[1]) {
@@ -93,6 +115,7 @@ const GGSearchBar: React.FC = () => {
 
     const handleHistoryItemClick = (item: string) => {
         setValue(item);
+        // removed for showcase
         //router.push(`/${selectedValue}/${encodeURIComponent(item)}`);
     };
 
@@ -160,16 +183,16 @@ const GGSearchBar: React.FC = () => {
                                     className={styles['search-history-item']}
                                 >
                                     {selectedValue === 'player' ? (
-                                        <SHPlayerItem id={item} onRemove={handleRemovePlayerHistoryItem}/>
+                                        <SHPlayerItem id={item} onRemove={handleRemovePlayerHistoryItem} playerData={players[item]}/>
                                     ) : (
-                                        <SHMatchItem id={item} onRemove={handleRemoveMatchHistoryItem} />
+                                        <SHMatchItem id={item} onRemove={handleRemoveMatchHistoryItem} matchData={matches[item]} />
                                     )}
                                 </li>
                             ))}
                         </ul>
                     ) : (
                         <div className={styles['no-history-message']}>
-                            <IconAlertCircle size={18} className={styles['icon-alert']}/>
+                            <CiCircleAlert size={18} className={styles['icon-alert']}/>
                             No {selectedValue === 'player' ? 'Player' : 'Match'} Search History!
                         </div>
                     )}

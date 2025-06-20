@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// import { useUser, ggUser } from '@/app/context/UserContext';
-// import { useCsrfToken } from '@/app/context/security/CSRFContext';
+
 import Image from 'next/image';
 
 import styles from './SearchHistoryItem.module.css';
@@ -12,6 +11,7 @@ interface SHPlayerItemProps {
     id: string;
     onRemove: (id: string) => void;
     onSuccessfulFetch?: (id: string) => void;
+    playerData?: SHPlayer;
 }
 
 interface lastMatchAverageRank {
@@ -27,75 +27,14 @@ interface SHPlayer {
     lastMatchAverageRank: lastMatchAverageRank;
 }
 
-const SHPlayerItem: React.FC<SHPlayerItemProps> = ({id, onRemove, onSuccessfulFetch}) => {
-    // const { user, setUser } = useUser();
-    // const { csrfToken } = useCsrfToken();
-    const [shPlayer, setSHPlayer] = useState<SHPlayer | null>(null);
-    // const isFavorite = user?.favorites?.includes(id) ?? false;
+const SHPlayerItem: React.FC<SHPlayerItemProps> = ({id, onRemove, onSuccessfulFetch, playerData}) => {
+    const [shPlayer, _] = useState<SHPlayer | null>(playerData || null);
     const [removePressed, setRemovePressed] = useState(false);
 
     const [hovered, setHovered] = useState(false);
     const [pressed, setPressed] = useState(false);
 
-    /* Not necessary in showcase, but kept for reference
-    useEffect(() => {
-        const cachedData = localStorage.getItem(`player_${id}`);
-        if (cachedData) {
-            setSHPlayer(JSON.parse(cachedData));
-        } else {
-            fetchSHPlayer();
-        }
-
-        async function fetchSHPlayer () {
-            try {
-                const res = await fetch(`http://127.0.0.1:8080/players/${id}/search-item/`);
-                if (!res.ok) throw new Error('Failed to fetch player data');
-                const data: SHPlayer = await res.json();
-                localStorage.setItem(`player_${id}`, JSON.stringify(data));
-                setSHPlayer(data);
-            } catch (err) {
-                setSHPlayer(null);
-            }
-        }
-    }, [id, onSuccessfulFetch]);
-
-
-    const handleFavoriteToggle = async (event: React.MouseEvent) => {
-        event.stopPropagation();
-        if (!user) {
-            return;
-        }
-
-        try {
-            const method = isFavorite ? 'DELETE' : 'POST';
-            const res = await fetch(`http://127.0.0.1:8080/user_mgmt/player-favorites/${id}/`, {
-                method,
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken ?? ''
-                },
-            });
-
-            if (res.ok) {
-                setUser((prevUser: ggUser) => {
-                    const currentFavorites = prevUser?.favorites ?? [];
-                    return {
-                        ...prevUser,
-                        favorites: isFavorite
-                            ? currentFavorites.filter((favId: string) => favId !== id)
-                            : [...currentFavorites, id],
-                    };
-                });
-            } else {
-                console.error('Failed to update favorites');
-            }
-        } catch (err) {
-            console.error('Error updating favorite:', err);
-        }
-    };
-    */
+    // Note: Hooks and constants removed for showcase.
 
     if (!shPlayer) {
         return (
